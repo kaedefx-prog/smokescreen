@@ -1,0 +1,63 @@
+# Visual Studio 2015+
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+build/
+bld/
+*.log
+*.tlog
+*.bak
+
+# Packages
+packages/
+*.nupkg
+*.snupkg
+*.dll
+*.exe
+
+# Rider
+.idea/
+*.iml
+
+# Visual Studio Code
+.vscode/
+
+# Misc
+*.pid
+*.seed
+*.opendb
+*.VC.db
+*.sdf
+*.cache
+*.aps
+*.ncb
+*.opensdf
+*.res
+*.resources
+*.tmp
+*.csproj.user
+*.userprefs
+*.kdev4
+*.sublime-workspace
+*.sublime-project
+*.tmproj
+*.esproj
+*.webproj
+*.njsproj
+*.vjsproj
+*.sln.ide
+*.sln.layout
+*.sln.layout.old
+*.sln.layout.user
+*.sln.layout.user.old
+*.sln.old
+*.sln.upgrade
