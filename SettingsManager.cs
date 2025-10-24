@@ -3,29 +3,29 @@ using System.Text.Json;
 
 namespace SmokeScreen;
 
+/// <summary>
+/// Manages loading and saving of application settings.
+/// </summary>
 public static class SettingsManager
 {
-    // 設定ファイルのパスを定義します。
     private static readonly string AppDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SmokeScreen");
     private static readonly string SettingsFilePath = Path.Combine(AppDataPath, "settings.json");
 
     /// <summary>
-    /// 設定をファイルに保存します。
+    /// Saves the application settings to a file.
     /// </summary>
-    public static void SaveSettings(AppSettings settings)
+    public static void SaveSettings(ApplicationSettings settings)
     {
-        // ディレクトリが存在しない場合は作成します。
         Directory.CreateDirectory(AppDataPath);
-
         var options = new JsonSerializerOptions { WriteIndented = true };
         var jsonString = JsonSerializer.Serialize(settings, options);
         File.WriteAllText(SettingsFilePath, jsonString);
     }
 
     /// <summary>
-    /// ファイルから設定を読み込みます。
+    /// Loads application settings from a file.
     /// </summary>
-    public static AppSettings? LoadSettings()
+    public static ApplicationSettings? LoadSettings()
     {
         if (!File.Exists(SettingsFilePath))
         {
@@ -33,21 +33,28 @@ public static class SettingsManager
         }
 
         var jsonString = File.ReadAllText(SettingsFilePath);
-        return JsonSerializer.Deserialize<AppSettings>(jsonString);
+        return JsonSerializer.Deserialize<ApplicationSettings>(jsonString);
     }
 }
 
 /// <summary>
-/// 保存する設定項目を定義するクラスです。
+/// Defines the root object for all application settings.
 /// </summary>
-public class AppSettings
+public class ApplicationSettings
+{
+    public List<PatchSetting> Patches { get; set; } = new();
+}
+
+
+/// <summary>
+/// Defines the settings for a single patch.
+/// </summary>
+public class PatchSetting
 {
     public double Top { get; set; }
     public double Left { get; set; }
     public double Width { get; set; }
     public double Height { get; set; }
-    // ブラシ情報を保存します。
     public BrushInfo? Brush { get; set; }
-    // PathGeometryを文字列として保存します。
     public string? ClipGeometry { get; set; }
 }
