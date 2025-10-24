@@ -29,8 +29,39 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         InitializeNotifyIcon();
+        LoadWindowSettings();
         // 初期色を適用
         Background = new SolidColorBrush(_overlayColor);
+    }
+
+    /// <summary>
+    /// ウィンドウ設定を読み込み、適用します。
+    /// </summary>
+    private void LoadWindowSettings()
+    {
+        var settings = SettingsManager.LoadSettings();
+        if (settings != null)
+        {
+            Top = settings.Top;
+            Left = settings.Left;
+            Width = settings.Width;
+            Height = settings.Height;
+        }
+    }
+
+    /// <summary>
+    /// 現在のウィンドウ設定を保存します。
+    /// </summary>
+    private void SaveWindowSettings()
+    {
+        var settings = new AppSettings
+        {
+            Top = this.Top,
+            Left = this.Left,
+            Width = this.Width,
+            Height = this.Height,
+        };
+        SettingsManager.SaveSettings(settings);
     }
     
     /// <summary>
@@ -174,6 +205,9 @@ public partial class MainWindow : Window
     /// </summary>
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
+        // 現在の設定を保存します。
+        SaveWindowSettings();
+
         // 色設定ウィンドウを閉じる
         _colorSettingsWindow?.Close();
         
