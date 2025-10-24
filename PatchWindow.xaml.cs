@@ -224,9 +224,6 @@ public partial class PatchWindow : Window
     /// </summary>
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
-        // Save settings before closing.
-        SaveWindowSettings();
-
         // Close the color settings window if it's open.
         _colorSettingsWindow?.Close();
         
