@@ -5,57 +5,122 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmokeScreen"
         mc:Ignorable="d"
-        Title="Color Settings" Height="300" Width="400">
+        Title="Color Settings" Height="Auto" Width="450" SizeToContent="Height">
     <StackPanel Margin="10">
         <!-- 色のプレビュー -->
         <Rectangle x:Name="ColorPreview" Height="50" Margin="0,0,0,10" Stroke="Black" StrokeThickness="1"/>
 
-        <!-- Alpha Slider -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="40"/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Alpha" Grid.Column="0"/>
-            <Slider x:Name="AlphaSlider" Grid.Column="1" Minimum="0" Maximum="255" Value="128" ValueChanged="Slider_ValueChanged"/>
-            <TextBlock Text="{Binding ElementName=AlphaSlider, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        </Grid>
+        <!-- ブラシタイプ選択 -->
+        <ComboBox x:Name="BrushTypeComboBox" SelectionChanged="BrushTypeComboBox_SelectionChanged" Margin="0,0,0,10">
+            <ComboBoxItem Content="単色"/>
+            <ComboBoxItem Content="線形グラデーション"/>
+        </ComboBox>
 
-        <!-- Red Slider -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="40"/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Red" Grid.Column="0"/>
-            <Slider x:Name="RedSlider" Grid.Column="1" Minimum="0" Maximum="255" Value="51" ValueChanged="Slider_ValueChanged"/>
-            <TextBlock Text="{Binding ElementName=RedSlider, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        </Grid>
+        <!-- 開始色 -->
+        <GroupBox Header="開始色">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Alpha" Grid.Column="0"/>
+                    <Slider x:Name="AlphaSlider1" Grid.Column="1" Minimum="0" Maximum="255" ValueChanged="Slider_ValueChanged"/>
+                    <TextBlock Text="{Binding ElementName=AlphaSlider1, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Red" Grid.Column="0"/>
+                    <Slider x:Name="RedSlider1" Grid.Column="1" Minimum="0" Maximum="255" ValueChanged="Slider_ValueChanged"/>
+                    <TextBlock Text="{Binding ElementName=RedSlider1, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Green" Grid.Column="0"/>
+                    <Slider x:Name="GreenSlider1" Grid.Column="1" Minimum="0" Maximum="255" ValueChanged="Slider_ValueChanged"/>
+                    <TextBlock Text="{Binding ElementName=GreenSlider1, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Blue" Grid.Column="0"/>
+                    <Slider x:Name="BlueSlider1" Grid.Column="1" Minimum="0" Maximum="255" ValueChanged="Slider_ValueChanged"/>
+                    <TextBlock Text="{Binding ElementName=BlueSlider1, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                </Grid>
+            </StackPanel>
+        </GroupBox>
 
-        <!-- Green Slider -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="40"/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Green" Grid.Column="0"/>
-            <Slider x:Name="GreenSlider" Grid.Column="1" Minimum="0" Maximum="255" Value="51" ValueChanged="Slider_ValueChanged"/>
-            <TextBlock Text="{Binding ElementName=GreenSlider, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        </Grid>
+        <!-- グラデーション設定 -->
+        <StackPanel x:Name="GradientControls" Visibility="Collapsed">
+            <!-- 終了色 -->
+            <GroupBox Header="終了色">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Alpha" Grid.Column="0"/>
+                        <Slider x:Name="AlphaSlider2" Grid.Column="1" Minimum="0" Maximum="255" ValueChanged="Slider_ValueChanged"/>
+                        <TextBlock Text="{Binding ElementName=AlphaSlider2, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Red" Grid.Column="0"/>
+                        <Slider x:Name="RedSlider2" Grid.Column="1" Minimum="0" Maximum="255" ValueChanged="Slider_ValueChanged"/>
+                        <TextBlock Text="{Binding ElementName=RedSlider2, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Green" Grid.Column="0"/>
+                        <Slider x:Name="GreenSlider2" Grid.Column="1" Minimum="0" Maximum="255" ValueChanged="Slider_ValueChanged"/>
+                        <TextBlock Text="{Binding ElementName=GreenSlider2, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Blue" Grid.Column="0"/>
+                        <Slider x:Name="BlueSlider2" Grid.Column="1" Minimum="0" Maximum="255" ValueChanged="Slider_ValueChanged"/>
+                        <TextBlock Text="{Binding ElementName=BlueSlider2, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
 
-        <!-- Blue Slider -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="40"/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Blue" Grid.Column="0"/>
-            <Slider x:Name="BlueSlider" Grid.Column="1" Minimum="0" Maximum="255" Value="51" ValueChanged="Slider_ValueChanged"/>
-            <TextBlock Text="{Binding ElementName=BlueSlider, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        </Grid>
+            <!-- 角度 -->
+            <GroupBox Header="角度">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="AngleSlider" Grid.Column="0" Minimum="0" Maximum="360" ValueChanged="Slider_ValueChanged"/>
+                    <TextBlock Text="{Binding ElementName=AngleSlider, Path=Value, StringFormat={}{0:F0}°}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                </Grid>
+            </GroupBox>
+        </StackPanel>
     </StackPanel>
 </Window>
