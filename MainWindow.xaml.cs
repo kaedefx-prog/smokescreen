@@ -101,6 +101,22 @@ public partial class MainWindow : Window
 
         // コンテキストメニューを作成します。
         var contextMenu = new ContextMenuStrip();
+        
+        var startupMenuItem = new ToolStripMenuItem("Windows起動時に実行");
+        startupMenuItem.CheckOnClick = true;
+        startupMenuItem.Checked = StartupManager.IsInStartup();
+        startupMenuItem.Click += (s, e) =>
+        {
+            if (startupMenuItem.Checked)
+            {
+                StartupManager.AddToStartup();
+            }
+            else
+            {
+                StartupManager.RemoveFromStartup();
+            }
+        };
+
         var editMenuItem = new ToolStripMenuItem("編集モード切り替え");
         editMenuItem.Click += (s, e) => ToggleEditMode();
         var colorMenuItem = new ToolStripMenuItem("色設定...");
@@ -108,6 +124,8 @@ public partial class MainWindow : Window
         var exitMenuItem = new ToolStripMenuItem("終了");
         exitMenuItem.Click += (s, e) => Close();
         
+        contextMenu.Items.Add(startupMenuItem);
+        contextMenu.Items.Add(new ToolStripSeparator());
         contextMenu.Items.Add(editMenuItem);
         contextMenu.Items.Add(colorMenuItem);
         contextMenu.Items.Add(new ToolStripSeparator());
