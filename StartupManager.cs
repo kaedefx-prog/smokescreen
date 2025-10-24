@@ -9,7 +9,7 @@ public static class StartupManager
     private static readonly string? AppPath = Assembly.GetExecutingAssembly().Location;
 
     // レジストリキーのパス
-    private const string RegistryPath = "SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+    private const string RegistryPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
 
     /// <summary>
     /// スタートアップに登録されているか確認します。

@@ -2,6 +2,8 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Brush = System.Windows.Media.Brush;
+using Color = System.Windows.Media.Color;
 
 namespace SmokeScreen
 {
@@ -89,19 +91,19 @@ namespace SmokeScreen
             return Color.FromArgb((byte)a.Value, (byte)r.Value, (byte)g.Value, (byte)b.Value);
         }
 
-        private (Point startPoint, Point endPoint) CalculateGradientPoints(double angle)
+        private (System.Windows.Point startPoint, System.Windows.Point endPoint) CalculateGradientPoints(double angle)
         {
             double rad = angle * Math.PI / 180.0;
             double x = Math.Cos(rad);
             double y = Math.Sin(rad);
 
-            Point startPoint = new Point(0.5 - x / 2, 0.5 - y / 2);
-            Point endPoint = new Point(0.5 + x / 2, 0.5 + y / 2);
+            System.Windows.Point startPoint = new System.Windows.Point(0.5 - x / 2, 0.5 - y / 2);
+            System.Windows.Point endPoint = new System.Windows.Point(0.5 + x / 2, 0.5 + y / 2);
 
             return (startPoint, endPoint);
         }
 
-        private double CalculateAngleFromPoints(Point startPoint, Point endPoint)
+        private double CalculateAngleFromPoints(System.Windows.Point startPoint, System.Windows.Point endPoint)
         {
             double dx = endPoint.X - startPoint.X;
             double dy = endPoint.Y - startPoint.Y;

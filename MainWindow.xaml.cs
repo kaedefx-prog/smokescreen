@@ -6,6 +6,7 @@ using System.Windows.Ink;
 // タスクトレイ表示に利用
 using System.Windows.Forms;
 using System.Drawing;
+using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using Color = System.Windows.Media.Color;
 using Point = System.Windows.Point;

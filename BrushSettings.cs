@@ -1,5 +1,8 @@
 using System.Text.Json.Serialization;
+using ColorConverter = System.Windows.Media.ColorConverter;
 using System.Windows.Media;
+using Brush = System.Windows.Media.Brush;
+using Color = System.Windows.Media.Color;
 
 namespace SmokeScreen;
 
@@ -42,8 +45,8 @@ public class LinearGradientBrushInfo : BrushInfo
 {
     public string StartColor { get; set; } = "#FFFFFFFF";
     public string EndColor { get; set; } = "#00000000";
-    public Point StartPoint { get; set; } = new(0.5, 0);
-    public Point EndPoint { get; set; } = new(0.5, 1);
+    public System.Windows.Point StartPoint { get; set; } = new System.Windows.Point(0.5, 0);
+    public System.Windows.Point EndPoint { get; set; } = new System.Windows.Point(0.5, 1);
 
     public override Brush ToBrush()
     {
