@@ -22,16 +22,16 @@ public partial class MainWindow : Window
     private NotifyIcon? _notifyIcon;
     // 色設定ウィンドウのインスタンス
     private ColorSettingsWindow? _colorSettingsWindow;
-    // オーバーレイの色
-    private Color _overlayColor = Color.FromArgb(0x80, 0x33, 0x33, 0x33);
+    // オーバーレイのブラシ
+    private Brush _overlayBrush = new SolidColorBrush(Color.FromArgb(0x80, 0x33, 0x33, 0x33));
 
     public MainWindow()
     {
         InitializeComponent();
         InitializeNotifyIcon();
         LoadWindowSettings();
-        // 初期色を適用
-        Background = new SolidColorBrush(_overlayColor);
+        // 初期ブラシを適用
+        Background = _overlayBrush;
     }
 
     /// <summary>
@@ -47,14 +47,11 @@ public partial class MainWindow : Window
             Width = settings.Width;
             Height = settings.Height;
 
-            // 色を復元
-            if (settings.OverlayColor != null)
+            // ブラシを復元
+            if (settings.Brush != null)
             {
-                if (ColorConverter.ConvertFromString(settings.OverlayColor) is Color color)
-                {
-                    _overlayColor = color;
-                    Background = new SolidColorBrush(_overlayColor);
-                }
+                _overlayBrush = settings.Brush.ToBrush();
+                Background = _overlayBrush;
             }
 
             // 形状を復元
@@ -70,13 +67,20 @@ public partial class MainWindow : Window
     /// </summary>
     private void SaveWindowSettings()
     {
+        BrushInfo? brushInfo = null;
+        if (_overlayBrush is SolidColorBrush solidBrush)
+        {
+            brushInfo = SolidBrushInfo.FromBrush(solidBrush);
+        }
+        // TODO: 将来的に他のブラシタイプもここに追加
+
         var settings = new AppSettings
         {
-            Top = this.Top,
-            Left = this.Left,
-            Width = this.Width,
-            Height = this.Height,
-            OverlayColor = _overlayColor.ToString(),
+            Top = Top,
+            Left = Left,
+            Width = Width,
+            Height = Height,
+            Brush = brushInfo,
             ClipGeometry = MainGrid.Clip?.ToString(),
         };
         SettingsManager.SaveSettings(settings);
@@ -116,9 +120,9 @@ public partial class MainWindow : Window
     {
         if (_colorSettingsWindow == null)
         {
-            _colorSettingsWindow = new ColorSettingsWindow(_overlayColor);
+            _colorSettingsWindow = new ColorSettingsWindow(_overlayBrush);
             _colorSettingsWindow.Owner = this;
-            _colorSettingsWindow.ColorChanged += ColorSettingsWindow_ColorChanged;
+            _colorSettingsWindow.BrushChanged += SettingsWindow_BrushChanged;
             _colorSettingsWindow.Closed += (s, e) => _colorSettingsWindow = null;
             _colorSettingsWindow.Show();
         }
@@ -129,15 +133,15 @@ public partial class MainWindow : Window
     }
 
     /// <summary>
-    /// 色設定ウィンドウから色が変更されたときに呼び出されます。
+    /// 色設定ウィンドウからブラシが変更されたときに呼び出されます。
     /// </summary>
-    private void ColorSettingsWindow_ColorChanged(Color newColor)
+    private void SettingsWindow_BrushChanged(Brush newBrush)
     {
-        _overlayColor = newColor;
+        _overlayBrush = newBrush;
         // 編集モードでない場合のみ、背景色を即時反映
         if (!_isEditMode)
         {
-            Background = new SolidColorBrush(_overlayColor);
+            Background = _overlayBrush;
         }
     }
 
@@ -178,7 +182,7 @@ public partial class MainWindow : Window
         {
             // 編集モードを終了する
             EditControls.Visibility = Visibility.Collapsed;
-            Background = new SolidColorBrush(_overlayColor); // 元の背景に戻す
+            Background = _overlayBrush; // 元の背景に戻す
         }
     }
 
@@ -208,7 +212,7 @@ public partial class MainWindow : Window
         _isEditMode = false;
         EditControls.Visibility = Visibility.Collapsed;
         MainGrid.Background = Brushes.Transparent; // グリッドの背景を透明にする
-        Background = new SolidColorBrush(_overlayColor); // ウィンドウの背景をオーバーレイの色に設定
+        Background = _overlayBrush; // ウィンドウの背景をオーバーレイの色に設定
         inkCanvas.IsHitTestVisible = false;
     }
 

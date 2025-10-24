@@ -46,8 +46,8 @@ public class AppSettings
     public double Left { get; set; }
     public double Width { get; set; }
     public double Height { get; set; }
-    // 色情報を文字列として保存します。
-    public string? OverlayColor { get; set; }
+    // ブラシ情報を保存します。
+    public BrushInfo? Brush { get; set; }
     // PathGeometryを文字列として保存します。
     public string? ClipGeometry { get; set; }
 }
