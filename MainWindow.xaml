@@ -8,7 +8,7 @@
         Title="SmokeScreen" Height="450" Width="800"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="#80333333"
+        Background="Transparent"
         Topmost="True"
         ShowInTaskbar="False"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">

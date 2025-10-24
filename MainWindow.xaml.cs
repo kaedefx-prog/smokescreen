@@ -31,8 +31,8 @@ public partial class MainWindow : Window
         InitializeComponent();
         InitializeNotifyIcon();
         LoadWindowSettings();
-        // 初期ブラシを適用
-        Background = _overlayBrush;
+        // 初期ブラシをグリッドに適用
+        MainGrid.Background = _overlayBrush;
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public partial class MainWindow : Window
             if (settings.Brush != null)
             {
                 _overlayBrush = settings.Brush.ToBrush();
-                Background = _overlayBrush;
+                MainGrid.Background = _overlayBrush;
             }
 
             // 形状を復元
@@ -163,7 +163,7 @@ public partial class MainWindow : Window
         // 編集モードでない場合のみ、背景色を即時反映
         if (!_isEditMode)
         {
-            Background = _overlayBrush;
+            MainGrid.Background = _overlayBrush;
         }
     }
 
@@ -197,14 +197,13 @@ public partial class MainWindow : Window
             EditControls.Visibility = Visibility.Visible;
             MainGrid.Background = new SolidColorBrush(Color.FromArgb(0x80, 0xFF, 0xFF, 0xFF)); // 半透明の白
             MainGrid.Clip = null; // 編集のためにクリップを解除
-            Background = Brushes.Transparent; // ウィンドウの背景を透明にして背後が見えるようにする
             inkCanvas.IsHitTestVisible = true;
         }
         else
         {
             // 編集モードを終了する
             EditControls.Visibility = Visibility.Collapsed;
-            Background = _overlayBrush; // 元の背景に戻す
+            MainGrid.Background = _overlayBrush; // 元の背景に戻す
         }
     }
 
@@ -233,8 +232,7 @@ public partial class MainWindow : Window
         // 適用後に編集モードを終了
         _isEditMode = false;
         EditControls.Visibility = Visibility.Collapsed;
-        MainGrid.Background = Brushes.Transparent; // グリッドの背景を透明にする
-        Background = _overlayBrush; // ウィンドウの背景をオーバーレイの色に設定
+        MainGrid.Background = _overlayBrush; // グリッドの背景をオーバーレイの色に設定
         inkCanvas.IsHitTestVisible = false;
     }
 
