@@ -6,7 +6,56 @@
         xmlns:local="clr-namespace:SmokeScreen"
         mc:Ignorable="d"
         Title="Color Settings" Height="300" Width="400">
-    <Grid>
-        
-    </Grid>
+    <StackPanel Margin="10">
+        <!-- 色のプレビュー -->
+        <Rectangle x:Name="ColorPreview" Height="50" Margin="0,0,0,10" Stroke="Black" StrokeThickness="1"/>
+
+        <!-- Alpha Slider -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Alpha" Grid.Column="0"/>
+            <Slider x:Name="AlphaSlider" Grid.Column="1" Minimum="0" Maximum="255" Value="128" ValueChanged="Slider_ValueChanged"/>
+            <TextBlock Text="{Binding ElementName=AlphaSlider, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        </Grid>
+
+        <!-- Red Slider -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Red" Grid.Column="0"/>
+            <Slider x:Name="RedSlider" Grid.Column="1" Minimum="0" Maximum="255" Value="51" ValueChanged="Slider_ValueChanged"/>
+            <TextBlock Text="{Binding ElementName=RedSlider, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        </Grid>
+
+        <!-- Green Slider -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Green" Grid.Column="0"/>
+            <Slider x:Name="GreenSlider" Grid.Column="1" Minimum="0" Maximum="255" Value="51" ValueChanged="Slider_ValueChanged"/>
+            <TextBlock Text="{Binding ElementName=GreenSlider, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        </Grid>
+
+        <!-- Blue Slider -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Blue" Grid.Column="0"/>
+            <Slider x:Name="BlueSlider" Grid.Column="1" Minimum="0" Maximum="255" Value="51" ValueChanged="Slider_ValueChanged"/>
+            <TextBlock Text="{Binding ElementName=BlueSlider, Path=Value, StringFormat={}{0:F0}}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        </Grid>
+    </StackPanel>
 </Window>

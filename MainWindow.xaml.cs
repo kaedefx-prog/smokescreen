@@ -20,11 +20,17 @@ public partial class MainWindow : Window
     private bool _isEditMode = false;
     // タスクトレイに表示するアイコン
     private NotifyIcon? _notifyIcon;
+    // 色設定ウィンドウのインスタンス
+    private ColorSettingsWindow? _colorSettingsWindow;
+    // オーバーレイの色
+    private Color _overlayColor = Color.FromArgb(0x80, 0x33, 0x33, 0x33);
 
     public MainWindow()
     {
         InitializeComponent();
         InitializeNotifyIcon();
+        // 初期色を適用
+        Background = new SolidColorBrush(_overlayColor);
     }
     
     /// <summary>
@@ -53,7 +59,38 @@ public partial class MainWindow : Window
 
         _notifyIcon.ContextMenuStrip = contextMenu;
     }
+    
+    /// <summary>
+    /// 色設定ウィンドウを表示します。既に開いている場合はアクティブにします。
+    /// </summary>
+    private void ShowColorSettingsWindow()
+    {
+        if (_colorSettingsWindow == null)
+        {
+            _colorSettingsWindow = new ColorSettingsWindow(_overlayColor);
+            _colorSettingsWindow.Owner = this;
+            _colorSettingsWindow.ColorChanged += ColorSettingsWindow_ColorChanged;
+            _colorSettingsWindow.Closed += (s, e) => _colorSettingsWindow = null;
+            _colorSettingsWindow.Show();
+        }
+        else
+        {
+            _colorSettingsWindow.Activate();
+        }
+    }
 
+    /// <summary>
+    /// 色設定ウィンドウから色が変更されたときに呼び出されます。
+    /// </summary>
+    private void ColorSettingsWindow_ColorChanged(Color newColor)
+    {
+        _overlayColor = newColor;
+        // 編集モードでない場合のみ、背景色を即時反映
+        if (!_isEditMode)
+        {
+            Background = new SolidColorBrush(_overlayColor);
+        }
+    }
 
     private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -92,7 +129,7 @@ public partial class MainWindow : Window
         {
             // 編集モードを終了する
             EditControls.Visibility = Visibility.Collapsed;
-            Background = new SolidColorBrush(Color.FromArgb(0x80, 0x33, 0x33, 0x33)); // 元の背景に戻す
+            Background = new SolidColorBrush(_overlayColor); // 元の背景に戻す
         }
     }
 
@@ -122,7 +159,7 @@ public partial class MainWindow : Window
         _isEditMode = false;
         EditControls.Visibility = Visibility.Collapsed;
         MainGrid.Background = Brushes.Transparent; // グリッドの背景を透明にする
-        Background = new SolidColorBrush(Color.FromArgb(0x80, 0x33, 0x33, 0x33)); // ウィンドウの背景をオーバーレイの色に設定
+        Background = new SolidColorBrush(_overlayColor); // ウィンドウの背景をオーバーレイの色に設定
         inkCanvas.IsHitTestVisible = false;
     }
 
@@ -137,6 +174,9 @@ public partial class MainWindow : Window
     /// </summary>
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
+        // 色設定ウィンドウを閉じる
+        _colorSettingsWindow?.Close();
+        
         // タスクトレイのアイコンを非表示にし、リソースを解放します。
         if (_notifyIcon != null)
         {
