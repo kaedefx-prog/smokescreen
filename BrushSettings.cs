@@ -7,8 +7,7 @@ namespace SmokeScreen;
 /// シリアライズ可能なブラシ設定の基本クラスです。
 /// </summary>
 [JsonDerivedType(typeof(SolidBrushInfo), typeDiscriminator: "Solid")]
-// 今後グラデーションを追加するための準備
-// [JsonDerivedType(typeof(LinearGradientBrushInfo), typeDiscriminator: "Linear")]
+[JsonDerivedType(typeof(LinearGradientBrushInfo), typeDiscriminator: "Linear")]
 public abstract class BrushInfo
 {
     public abstract Brush ToBrush();
@@ -33,5 +32,34 @@ public class SolidBrushInfo : BrushInfo
     public static SolidBrushInfo FromBrush(SolidColorBrush brush)
     {
         return new SolidBrushInfo { Color = brush.Color.ToString() };
+    }
+}
+
+/// <summary>
+/// 線形グラデーションブラシの情報を保持します。
+/// </summary>
+public class LinearGradientBrushInfo : BrushInfo
+{
+    public string StartColor { get; set; } = "#FFFFFFFF";
+    public string EndColor { get; set; } = "#00000000";
+    public Point StartPoint { get; set; } = new(0.5, 0);
+    public Point EndPoint { get; set; } = new(0.5, 1);
+
+    public override Brush ToBrush()
+    {
+        var sc = (Color)(ColorConverter.ConvertFromString(StartColor) ?? Colors.Transparent);
+        var ec = (Color)(ColorConverter.ConvertFromString(EndColor) ?? Colors.Transparent);
+        return new LinearGradientBrush(sc, ec, StartPoint, EndPoint);
+    }
+
+    public static LinearGradientBrushInfo FromBrush(LinearGradientBrush brush)
+    {
+        return new LinearGradientBrushInfo
+        {
+            StartColor = brush.GradientStops[0].Color.ToString(),
+            EndColor = brush.GradientStops[1].Color.ToString(),
+            StartPoint = brush.StartPoint,
+            EndPoint = brush.EndPoint
+        };
     }
 }

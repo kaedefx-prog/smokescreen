@@ -72,7 +72,10 @@ public partial class MainWindow : Window
         {
             brushInfo = SolidBrushInfo.FromBrush(solidBrush);
         }
-        // TODO: 将来的に他のブラシタイプもここに追加
+        else if (_overlayBrush is LinearGradientBrush linearBrush)
+        {
+            brushInfo = LinearGradientBrushInfo.FromBrush(linearBrush);
+        }
 
         var settings = new AppSettings
         {
