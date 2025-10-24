@@ -41,10 +41,13 @@ public partial class MainWindow : Window
         var contextMenu = new ContextMenuStrip();
         var editMenuItem = new ToolStripMenuItem("編集モード切り替え");
         editMenuItem.Click += (s, e) => ToggleEditMode();
+        var colorMenuItem = new ToolStripMenuItem("色設定...");
+        colorMenuItem.Click += (s, e) => ShowColorSettingsWindow();
         var exitMenuItem = new ToolStripMenuItem("終了");
         exitMenuItem.Click += (s, e) => Close();
         
         contextMenu.Items.Add(editMenuItem);
+        contextMenu.Items.Add(colorMenuItem);
         contextMenu.Items.Add(new ToolStripSeparator());
         contextMenu.Items.Add(exitMenuItem);
 
