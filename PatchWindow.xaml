@@ -1,0 +1,22 @@
+<Window x:Class="SmokeScreen.PatchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmokeScreen"
+        mc:Ignorable="d"
+        Title="SmokeScreen" Height="450" Width="800"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+    <Grid x:Name="MainGrid" MouseDown="Grid_MouseDown">
+        <StackPanel x:Name="EditControls" Visibility="Collapsed">
+            <InkCanvas x:Name="inkCanvas" Height="400" EditingMode="Ink"/>
+            <Button x:Name="ApplyButton" Content="Apply Shape" Click="ApplyButton_Click"/>
+            <Button x:Name="ClearButton" Content="Clear" Click="ClearButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
