@@ -22,9 +22,6 @@ public partial class PatchWindow : Window
 {
     private bool _isEditMode = false;
     private bool _isInteractive = true;
-    // The NotifyIcon is managed by the App class now.
-    private NotifyIcon? _notifyIcon;
-    private ToolStripMenuItem? _setupModeMenuItem;
     // The ColorSettingsWindow is also managed by this window.
     private ColorSettingsWindow? _colorSettingsWindow;
     // The overlay brush for this specific patch.
@@ -33,8 +30,6 @@ public partial class PatchWindow : Window
     public PatchWindow()
     {
         InitializeComponent();
-        // The NotifyIcon is no longer initialized here.
-        // InitializeNotifyIcon(); 
         LoadWindowSettings();
         // Apply initial brush to the grid
         MainGrid.Background = _overlayBrush;
@@ -44,15 +39,10 @@ public partial class PatchWindow : Window
     /// <summary>
     /// Sets the interactive mode for the window (click-through or not).
     /// </summary>
-    private void SetInteractiveMode(bool isInteractive)
+    public void SetInteractiveMode(bool isInteractive)
     {
         _isInteractive = isInteractive;
         IsHitTestVisible = isInteractive;
-
-        if (_setupModeMenuItem != null)
-        {
-            _setupModeMenuItem.Checked = isInteractive;
-        }
 
         // If interactivity is turned off, force exit edit mode.
         if (!isInteractive && _isEditMode)
@@ -116,58 +106,10 @@ public partial class PatchWindow : Window
         SettingsManager.SaveSettings(settings);
     }
     
-    // This method will be moved to the App class.
-    private void InitializeNotifyIcon()
-    {
-        _notifyIcon = new NotifyIcon();
-        _notifyIcon.Icon = SystemIcons.Application;
-        _notifyIcon.Text = "SmokeScreen";
-        _notifyIcon.Visible = true;
-
-        var contextMenu = new ContextMenuStrip();
-        
-        _setupModeMenuItem = new ToolStripMenuItem("Setup Mode");
-        _setupModeMenuItem.CheckOnClick = true;
-        _setupModeMenuItem.Checked = _isInteractive;
-        _setupModeMenuItem.Click += (s, e) => SetInteractiveMode(_setupModeMenuItem.Checked);
-
-        var startupMenuItem = new ToolStripMenuItem("Run on Windows startup");
-        startupMenuItem.CheckOnClick = true;
-        startupMenuItem.Checked = StartupManager.IsInStartup();
-        startupMenuItem.Click += (s, e) =>
-        {
-            if (startupMenuItem.Checked)
-            {
-                StartupManager.AddToStartup();
-            }
-            else
-            {
-                StartupManager.RemoveFromStartup();
-            }
-        };
-
-        var editMenuItem = new ToolStripMenuItem("Edit Mode");
-        editMenuItem.Click += (s, e) => ToggleEditMode();
-        var colorMenuItem = new ToolStripMenuItem("Color Settings...");
-        colorMenuItem.Click += (s, e) => ShowColorSettingsWindow();
-        var exitMenuItem = new ToolStripMenuItem("Exit");
-        exitMenuItem.Click += (s, e) => Close();
-        
-        contextMenu.Items.Add(_setupModeMenuItem);
-        contextMenu.Items.Add(editMenuItem);
-        contextMenu.Items.Add(colorMenuItem);
-        contextMenu.Items.Add(new ToolStripSeparator());
-        contextMenu.Items.Add(startupMenuItem);
-        contextMenu.Items.Add(new ToolStripSeparator());
-        contextMenu.Items.Add(exitMenuItem);
-
-        _notifyIcon.ContextMenuStrip = contextMenu;
-    }
-    
     /// <summary>
     /// Shows the color settings window.
     /// </summary>
-    private void ShowColorSettingsWindow()
+    public void ShowColorSettingsWindow()
     {
         // Opening the window automatically enables setup mode.
         if (!_isInteractive) SetInteractiveMode(true);
@@ -220,7 +162,7 @@ public partial class PatchWindow : Window
     /// <summary>
     /// Toggles the ink canvas editing mode.
     /// </summary>
-    private void ToggleEditMode(bool forceExit = false)
+    public void ToggleEditMode(bool forceExit = false)
     {
         // Entering edit mode automatically enables setup mode.
         if (!_isInteractive) SetInteractiveMode(true);
@@ -288,13 +230,6 @@ public partial class PatchWindow : Window
         // Close the color settings window if it's open.
         _colorSettingsWindow?.Close();
         
-        // Dispose the notify icon.
-        if (_notifyIcon != null)
-        {
-            _notifyIcon.Visible = false;
-            _notifyIcon.Dispose();
-            _notifyIcon = null;
-        }
         base.OnClosing(e);
     }
 }
