@@ -46,6 +46,22 @@ public partial class MainWindow : Window
             Left = settings.Left;
             Width = settings.Width;
             Height = settings.Height;
+
+            // 色を復元
+            if (settings.OverlayColor != null)
+            {
+                if (ColorConverter.ConvertFromString(settings.OverlayColor) is Color color)
+                {
+                    _overlayColor = color;
+                    Background = new SolidColorBrush(_overlayColor);
+                }
+            }
+
+            // 形状を復元
+            if (!string.IsNullOrEmpty(settings.ClipGeometry))
+            {
+                MainGrid.Clip = PathGeometry.Parse(settings.ClipGeometry);
+            }
         }
     }
 
@@ -60,6 +76,8 @@ public partial class MainWindow : Window
             Left = this.Left,
             Width = this.Width,
             Height = this.Height,
+            OverlayColor = _overlayColor.ToString(),
+            ClipGeometry = MainGrid.Clip?.ToString(),
         };
         SettingsManager.SaveSettings(settings);
     }
