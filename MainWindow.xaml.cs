@@ -19,8 +19,10 @@ namespace SmokeScreen;
 public partial class MainWindow : Window
 {
     private bool _isEditMode = false;
+    private bool _isInteractive = true;
     // タスクトレイに表示するアイコン
     private NotifyIcon? _notifyIcon;
+    private ToolStripMenuItem? _setupModeMenuItem;
     // 色設定ウィンドウのインスタンス
     private ColorSettingsWindow? _colorSettingsWindow;
     // オーバーレイのブラシ
@@ -33,6 +35,27 @@ public partial class MainWindow : Window
         LoadWindowSettings();
         // 初期ブラシをグリッドに適用
         MainGrid.Background = _overlayBrush;
+        SetInteractiveMode(_isInteractive);
+    }
+
+    /// <summary>
+    /// ウィンドウの対話モードを設定します。
+    /// </summary>
+    private void SetInteractiveMode(bool isInteractive)
+    {
+        _isInteractive = isInteractive;
+        IsHitTestVisible = isInteractive;
+
+        if (_setupModeMenuItem != null)
+        {
+            _setupModeMenuItem.Checked = isInteractive;
+        }
+
+        // 対話モードがオフになったら、編集モードも強制的に終了する
+        if (!isInteractive && _isEditMode)
+        {
+            ToggleEditMode(forceExit: true);
+        }
     }
 
     /// <summary>
@@ -103,6 +126,11 @@ public partial class MainWindow : Window
         // コンテキストメニューを作成します。
         var contextMenu = new ContextMenuStrip();
         
+        _setupModeMenuItem = new ToolStripMenuItem("設定モード");
+        _setupModeMenuItem.CheckOnClick = true;
+        _setupModeMenuItem.Checked = _isInteractive;
+        _setupModeMenuItem.Click += (s, e) => SetInteractiveMode(_setupModeMenuItem.Checked);
+
         var startupMenuItem = new ToolStripMenuItem("Windows起動時に実行");
         startupMenuItem.CheckOnClick = true;
         startupMenuItem.Checked = StartupManager.IsInStartup();
@@ -125,10 +153,11 @@ public partial class MainWindow : Window
         var exitMenuItem = new ToolStripMenuItem("終了");
         exitMenuItem.Click += (s, e) => Close();
         
-        contextMenu.Items.Add(startupMenuItem);
-        contextMenu.Items.Add(new ToolStripSeparator());
+        contextMenu.Items.Add(_setupModeMenuItem);
         contextMenu.Items.Add(editMenuItem);
         contextMenu.Items.Add(colorMenuItem);
+        contextMenu.Items.Add(new ToolStripSeparator());
+        contextMenu.Items.Add(startupMenuItem);
         contextMenu.Items.Add(new ToolStripSeparator());
         contextMenu.Items.Add(exitMenuItem);
 
@@ -140,6 +169,9 @@ public partial class MainWindow : Window
     /// </summary>
     private void ShowColorSettingsWindow()
     {
+        // ウィンドウを開く操作は、自動的に設定モードをオンにする
+        if (!_isInteractive) SetInteractiveMode(true);
+
         if (_colorSettingsWindow == null)
         {
             _colorSettingsWindow = new ColorSettingsWindow(_overlayBrush);
@@ -169,15 +201,16 @@ public partial class MainWindow : Window
 
     private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        // Only allow dragging when not in edit mode and not a double click.
-        if (!_isEditMode && e.ClickCount < 2)
-        {
-            DragMove();
-        }
+        // IsHitTestVisible=false の場合、このイベントは発生しないが、念のためチェック
+        if (!_isInteractive || (_isEditMode && e.ClickCount >= 2)) return;
+
+        DragMove();
     }
 
     private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
     {
+        if (!_isInteractive) return;
+
         if (e.ClickCount >= 2)
         {
             ToggleEditMode();
@@ -187,9 +220,13 @@ public partial class MainWindow : Window
     /// <summary>
     /// 編集モードのオン/オフを切り替えます。
     /// </summary>
-    private void ToggleEditMode()
+    private void ToggleEditMode(bool forceExit = false)
     {
-        _isEditMode = !_isEditMode;
+        // 編集モードに入る操作は、自動的に設定モードをオンにする
+        if (!_isInteractive) SetInteractiveMode(true);
+
+        // 現在の状態を反転させるか、強制的に終了するか
+        _isEditMode = forceExit ? false : !_isEditMode;
 
         if (_isEditMode)
         {
@@ -204,6 +241,7 @@ public partial class MainWindow : Window
             // 編集モードを終了する
             EditControls.Visibility = Visibility.Collapsed;
             MainGrid.Background = _overlayBrush; // 元の背景に戻す
+            inkCanvas.IsHitTestVisible = false;
         }
     }
 
@@ -230,10 +268,7 @@ public partial class MainWindow : Window
         }
 
         // 適用後に編集モードを終了
-        _isEditMode = false;
-        EditControls.Visibility = Visibility.Collapsed;
-        MainGrid.Background = _overlayBrush; // グリッドの背景をオーバーレイの色に設定
-        inkCanvas.IsHitTestVisible = false;
+        ToggleEditMode(forceExit: true);
     }
 
     private void ClearButton_Click(object sender, RoutedEventArgs e)
